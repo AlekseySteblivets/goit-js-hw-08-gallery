@@ -11,8 +11,10 @@ import arrayCards from './gallery-items.js';
 // чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
 
 // step -1 Создание и рендер разметки по массиву данных и предоставленному шаблону.
-
 const galerryEl = document.querySelector('.js-gallery');
+const modalWindowEl = document.querySelector('.lightbox');
+const imgOpenModalEl = document.querySelector('.lightbox__image');
+const buttonCloseModalWindow = document.querySelector('.lightbox__button');
 
 function makeCardsMarkup(card) {
     const { preview, original, description } = card;
@@ -34,7 +36,6 @@ function makeCardsMarkup(card) {
 };
 
 const makeRenderRows = arrayCards.map(makeCardsMarkup).join(' ');
-
 galerryEl.insertAdjacentHTML('beforeend', makeRenderRows);
 
 
@@ -47,21 +48,25 @@ function onGalleryContainerClick(evt) {
         return;
     }
 
-    let urlBigSize = evt.target.dataset.source;
+    const urlBigSize = evt.target.dataset.source;
 
-    console.log(urlBigSize);
-    // console.log(evt.target);
-    // const galleryLinkEl = evt.target;
-    // const parentContainerCard = galleryLinkEl.closest('gallery__item');
+    evt.preventDefault();
 
-    // // функция - получение url большого изображения
-    // addUrlBigSize(parentContainerCard);
+    //3. Открытие модального окна по клику на элементе галереи.
+    modalWindowEl.classList.add('is-open');
 
-
+    // Step-4. Подмена значения атрибута src элемента img.lightbox__image.
+    imgOpenModalEl.src = urlBigSize;
+    console.log(imgOpenModalEl.src);
 }
 
-// function addUrlBigSize(card) {
-//     card.src = card.dataset.source
-//     console.log(card);
+// 5. Закрытие модального окна по клику на кнопку button[data - action= "close-lightbox"].
+buttonCloseModalWindow.addEventListener('click', onCloseModalWindowClick);
 
-// };
+function onCloseModalWindowClick() {
+    modalWindowEl.classList.remove('is-open');
+
+    // 6.  Очистка значения атрибута src элемента img.lightbox__image.Это необходимо для того,
+    imgOpenModalEl.src = "";
+    console.log(imgOpenModalEl.src);
+};
